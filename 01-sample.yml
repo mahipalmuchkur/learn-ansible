@@ -1,6 +1,5 @@
 - name: INstall nginx
   hosts: WEB
-  become: true
   tastks:
     - name: Install nginx
       ansible.builtin.yum:
