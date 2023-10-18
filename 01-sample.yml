@@ -1,7 +1,8 @@
 - name: INstall nginx
   hosts: WEB
+  become: true
   tastks:
-    - name: Install nginx
+    - name: Installl nginx
       ansible.builtin.yum:
       name: httpd
       state: latest
