@@ -1,0 +1,53 @@
+#------------------------------------------------------------------------------------------   1
+#echo -e "\e[36m >>>>>>>>>>>>Creating Mongo repo file<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#cp mongo.repo /etc/yum.repos.d/mongo.repo &>>${log}
+#------------------------------------------------------------------------------------------   1
+#func_exit_status
+#--------------------------------------------------------------------------------------------  2
+#echo -e "\e[36m >>>>>>>>>>>>Installing Nodejs Repo<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${log}
+#--------------------------------------------------------------------------------------------  2
+#func_exit_status
+#--------------------------------------------------------------------------------------------- 3
+#echo -e "\e[36m >>>>>>>>>>>>Install Nodejs<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#yum install nodejs -y &>>${log}
+#--------------------------------------------------------------------------------------------- 3
+#func_exit_status
+#--------------------------------------------------------------------------------------------- 4
+#func_appreq  [ here i have created one file name as app-preq.yml] this is fourth step
+#--------------------------------------------------------------------------------------------- 4
+
+#--------------------------------------------------------------------------------------------- 5
+#echo -e "\e[36m >>>>>>>>>>>>Download Nodejs Dependencies<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#npm install &>>${log}
+#--------------------------------------------------------------------------------------------- 5
+
+#--------------------------------------------------------------------------------------------- 6
+#func_schema_setup
+#--------------------------------------------------------------------------------------------- 6
+#
+#echo -e "\e[36m >>>>>>>>>>>>Daemon-reload Enabling and Restarting<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#
+#func_systemd
+
+- name: Install NodeJS Repo
+  ansible.builtin.shell: https://rpm.nodesource.com/setup_lts.x | bash
+
+- name: Install NodeJS
+  ansible.builtin.yum:
+    name: nodejs
+    state: installed
+
+- name: App pre-requisites
+  ansible.builtin.import_tasks: app-preq.yml
+
+- name: Download NodeJS Dependencies
+  ansible.builtin.shell: npm install
+  args:
+    chdir: /app
+
+- name: NodeJs setup
+  ansible.builtin.import_tasks: mongo-schema.yml
+
+- name: systemD setup
+  ansible.builtin.import_tasks: systemd-setup.yml
