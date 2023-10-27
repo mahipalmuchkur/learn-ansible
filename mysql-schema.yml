@@ -1,0 +1,18 @@
+#-------------------------------------------------------------------  1
+#echo -e "\e[36m >>>>>>>>>>>>Installing Mongo Client<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#yum install mongodb-org-shell -y &>>${log}
+#-------------------------------------------------------------------  1
+#func_exit_status
+#-------------------------------------------------------------------  2
+#echo -e "\e[36m >>>>>>>>>>>>Loading Schema<<<<<<<<<<<<<<<< \e[0m"  | tee -a /tmp/roboshop.log
+#mongo --host mongodb.mdevopsb74.online </app/schema/${component}.js &>>${log}
+#-------------------------------------------------------------------  2
+
+#------------- I have taken this(copy mongodb repo file) from nodejs.yml
+- name: Install MySQL client
+  ansible.builtin.yum:
+    name: mysql
+    state: installed
+
+- name: Load Schema
+  ansible.builtin.shell: mysql -h mysql-dev.mdevopsb74.online -uroot -pRoboShop@1 < /app/schema/{{component}}.sql
